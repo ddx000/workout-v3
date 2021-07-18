@@ -17,7 +17,7 @@ admin = Admin(app, name='microblog', template_mode='bootstrap3')
 print("##########2")
 # Build the Sqlite ULR for SqlAlchemy
 # three slash for windows
-sqlite_url = "sqlite:///" + os.path.join(basedir, "people.db")
+sqlite_url = "sqlite:///" + os.path.join(basedir, "testsqlite.db")
 
 print(sqlite_url)
 
@@ -25,6 +25,7 @@ print(sqlite_url)
 app.config["SQLALCHEMY_ECHO"] = False
 app.config["SQLALCHEMY_DATABASE_URI"] = sqlite_url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SECRET_KEY"] = "test_app"
 
 # Create the SqlAlchemy db instance
 db = SQLAlchemy(app)

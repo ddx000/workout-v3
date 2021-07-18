@@ -4,45 +4,81 @@ from marshmallow import fields
 from flask_admin.contrib.sqla import ModelView
 
 
-class Person(db.Model):
-    __tablename__ = "person"
-    person_id = db.Column(db.Integer, primary_key=True)
-    lname = db.Column(db.String(32))
-    fname = db.Column(db.String(32))
+class User(db.Model):
+    __tablename__ = "user"
+    user_id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(32))
+    email = db.Column(db.String(32))
+    access_token = db.Column(db.String(32))
     timestamp = db.Column(
         db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
     )
-    notes = db.relationship(
-        "Note",
-        backref="person",
+    menus = db.relationship(
+        "Menu",
+        backref="User",
         cascade="all, delete, delete-orphan",
         single_parent=True,
-        order_by="desc(Note.timestamp)",
+        order_by="desc(Menu.timestamp)",
     )
 
 
-class Note(db.Model):
-    __tablename__ = "note"
-    note_id = db.Column(db.Integer, primary_key=True)
-    person_id = db.Column(db.Integer, db.ForeignKey("person.person_id"))
+class Menu(db.Model):
+    __tablename__ = "menu"
+    menu_id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(32))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
+    timestamp = db.Column(
+        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
+    )
+    actions = db.relationship(
+        "Action",
+        backref="Menu",
+        cascade="all, delete, delete-orphan",
+        single_parent=True,
+        order_by="desc(Action.timestamp)",
+    )
+
+
+class Action(db.Model):
+    __tablename__ = "action"
+    action_id = db.Column(db.Integer, primary_key=True)
+    menu_id = db.Column(db.Integer, db.ForeignKey("menu.menu_id"))
     content = db.Column(db.String, nullable=False)
     timestamp = db.Column(
         db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
     )
+    records = db.relationship(
+        "Record",
+        backref="Action",
+        cascade="all, delete, delete-orphan",
+        single_parent=True,
+        order_by="desc(Record.timestamp)",
+    )
 
 
-class PersonSchema(ma.ModelSchema):
+class Record(db.Model):
+    __tablename__ = "record"
+    record_id = db.Column(db.Integer, primary_key=True)
+    action_id = db.Column(db.Integer, db.ForeignKey("action.action_id"))
+    weight = db.Column(db.Integer)
+    reps = db.Column(db.Integer)
+    timestamp = db.Column(
+        db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
+    )
+
+
+class MenuSchema(ma.ModelSchema):
     def __init__(self, **kwargs):
         super().__init__(strict=True, **kwargs)
 
     class Meta:
-        model = Person
+        model = Menu
         sqla_session = db.session
 
-    notes = fields.Nested("PersonNoteSchema", default=[], many=True)
+    actions = fields.Nested("MenuActionSchema", default=[], many=True)
 
 
-class PersonNoteSchema(ma.ModelSchema):
+class MenuActionSchema(ma.ModelSchema):
     """
     This class exists to get around a recursion issue
     """
@@ -50,24 +86,24 @@ class PersonNoteSchema(ma.ModelSchema):
     def __init__(self, **kwargs):
         super().__init__(strict=True, **kwargs)
 
-    note_id = fields.Int()
-    person_id = fields.Int()
+    action_id = fields.Int()
+    menu_id = fields.Int()
     content = fields.Str()
     timestamp = fields.Str()
 
 
-class NoteSchema(ma.ModelSchema):
+class ActionSchema(ma.ModelSchema):
     def __init__(self, **kwargs):
         super().__init__(strict=True, **kwargs)
 
     class Meta:
-        model = Note
+        model = Action
         sqla_session = db.session
 
-    person = fields.Nested("NotePersonSchema", default=None)
+    records = fields.Nested("RecordSchema", default=[], many=True)
 
 
-class NotePersonSchema(ma.ModelSchema):
+class ActionMenuSchema(ma.ModelSchema):
     """
     This class exists to get around a recursion issue
     """
@@ -75,11 +111,22 @@ class NotePersonSchema(ma.ModelSchema):
     def __init__(self, **kwargs):
         super().__init__(strict=True, **kwargs)
 
-    person_id = fields.Int()
-    lname = fields.Str()
-    fname = fields.Str()
+    menu_id = fields.Int()
+    user_id = fields.Int()
+    name = fields.Str()
     timestamp = fields.Str()
 
 
-admin.add_view(ModelView(Person, db.session))
-admin.add_view(ModelView(Note, db.session))
+class RecordSchema(ma.ModelSchema):
+    def __init__(self, **kwargs):
+        super().__init__(strict=True, **kwargs)
+
+    class Meta:
+        model = Record
+        sqla_session = db.session
+
+
+admin.add_view(ModelView(User, db.session))
+admin.add_view(ModelView(Menu, db.session))
+admin.add_view(ModelView(Action, db.session))
+admin.add_view(ModelView(Record, db.session))

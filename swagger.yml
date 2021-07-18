@@ -12,372 +12,144 @@ basePath: /api
 
 # Paths supported by the server application
 paths:
-  /people:
+  /menu:
     get:
-      operationId: people.read_all
+      operationId: menu.read_all
       tags:
-        - People
-      summary: Read the entire set of people, sorted by last name
-      description: Read the entire set of people, sorted by last name
+        - Menu
+      summary: Read the entire set of menu, sorted by last name
+      description: Read the entire set of menu, sorted by last name
       responses:
         200:
-          description: Successfully read people set operation
-          schema:
-            type: array
-            items:
-              properties:
-                person_id:
-                  type: integer
-                  description: Id of the person
-                fname:
-                  type: string
-                  description: First name of the person
-                lname:
-                  type: string
-                  description: Last name of the person
-                timestamp:
-                  type: string
-                  description: Create/Update timestamp of the person
-                notes:
-                  type: array
-                  items:
-                    properties:
-                      person_id:
-                        type: integer
-                        description: Id of person this note is associated with
-                      note_id:
-                        type: integer
-                        description: Id of this note
-                      content:
-                        type: string
-                        description: content of this note
-                      timestamp:
-                        type: string
-                        description: Create/Update timestamp of this note
+          description: Successfully read menu set operation
 
     post:
-      operationId: people.create
+      operationId: menu.create
       tags:
-        - People
-      summary: Create a person
-      description: Create a new person
+        - Menu
+      summary: Create a menu
+      description: Create a new menu
       parameters:
-        - name: person
+        - name: menu
           in: body
-          description: Person to create
+          description: Menu to create
           required: True
           schema:
             type: object
             properties:
-              fname:
+              name:
                 type: string
-                description: First name of person to create
-              lname:
-                type: string
-                description: Last name of person to create
+                description: name of menu to create
+              user_id:
+                type: integer
+                description: user of the menu to post
+
       responses:
         201:
-          description: Successfully created person
-          schema:
-            properties:
-              person_id:
-                type: integer
-                description: Id of the person
-              fname:
-                type: string
-                description: First name of the person
-              lname:
-                type: string
-                description: Last name of the person
-              timestamp:
-                type: string
-                description: Creation/Update timestamp of the person record
+          description: Successfully created menu
 
-  /people/{person_id}:
+  /menu/{menu_id}:
     get:
-      operationId: people.read_one
+      operationId: menu.read_one
       tags:
-        - People
-      summary: Read one person
-      description: Read one person
+        - Menu
+      summary: Read one menu
+      description: Read one menu
       parameters:
-        - name: person_id
+        - name: menu_id
           in: path
-          description: Id of the person to get
+          description: Id of the menu to get
           type: integer
           required: True
       responses:
         200:
-          description: Successfully read person from people data operation
-          schema:
-            type: object
-            properties:
-              person_id:
-                type: string
-                description: Id of the person
-              fname:
-                type: string
-                description: First name of the person
-              lname:
-                type: string
-                description: Last name of the person
-              timestamp:
-                type: string
-                description: Creation/Update timestamp of the person record
-              notes:
-                type: array
-                items:
-                  properties:
-                    person_id:
-                      type: integer
-                      description: Id of person this note is associated with
-                    note_id:
-                      type: integer
-                      description: Id of this note
-                    content:
-                      type: string
-                      description: content of this note
-                    timestamp:
-                      type: string
-                      description: Create/Update timestamp of this note
+          description: Successfully read menu from menu data operation
 
-    put:
-      operationId: people.update
-      tags:
-        - People
-      summary: Update a person
-      description: Update a person
-      parameters:
-        - name: person_id
-          in: path
-          description: Id the person to update
-          type: integer
-          required: True
-        - name: person
-          in: body
-          schema:
-            type: object
-            properties:
-              fname:
-                type: string
-                description: First name of the person
-              lname:
-                type: string
-                description: Last name of the person
-      responses:
-        200:
-          description: Successfully updated person
-          schema:
-            properties:
-              person_id:
-                type: integer
-                description: Id of the person in the database
-              fname:
-                type: string
-                description: First name of the person
-              lname:
-                type: string
-                description: Last name of the person
-              timestamp:
-                type: string
-                description: Creation/Update timestamp of the person record
-
-    delete:
-      operationId: people.delete
-      tags:
-        - People
-      summary: Delete a person from the people list
-      description: Delete a person
-      parameters:
-        - name: person_id
-          in: path
-          type: integer
-          description: Id of the person to delete
-          required: true
-      responses:
-        200:
-          description: Successfully deleted a person
-
-  /notes:
+  /actions:
     get:
-      operationId: notes.read_all
+      operationId: actions.read_all
       tags:
-        - Notes
-      summary: Read the entire set of notes for all people, sorted by timestamp
-      description: Read the entire set of notes for all people, sorted by timestamp
+        - Actions
+      summary: Read the entire set of actions for all menu, sorted by timestamp
+      description: Read the entire set of actions for all menu, sorted by timestamp
       responses:
         200:
-          description: Successfully read notes for all people operation
-          schema:
-            type: array
-            items:
-              properties:
-                note_id:
-                  type: integer
-                  description: Id of the note
-                content:
-                  type: string
-                  description: Content of the note
-                timestamp:
-                  type: string
-                  description: Create/Update timestamp of the note
-                person:
-                  type: object
-                  properties:
-                    person_id:
-                      type: integer
-                      description: Id of associated person
-                    fname:
-                      type: string
-                      description: Frist name of associated person
-                    lname:
-                      type: string
-                      description: Last name of associated person
-                    timestamp:
-                      type: string
-                      description: Create/Update timestamp of associated person
+          description: Successfully read actions for all menu operation
 
-
-  /people/{person_id}/notes:
+  /menu/{menu_id}/actions:
     post:
-      operationId: notes.create
+      operationId: actions.create
       tags:
-        - Notes
-      summary: Create a note associated with a person
-      description: Create a note associated with a person
+        - Actions
+      summary: Create a action associated with a menu
+      description: Create a action associated with a menu
       parameters:
-        - name: person_id
+        - name: menu_id
           in: path
-          description: Id of person associated with note
+          description: Id of menu associated with action
           type: integer
           required: True
-        - name: note
+        - name: action
           in: body
-          description: Text content of the note to create
+          description: Text content of the action to create
           required: True
           schema:
             type: object
             properties:
               content:
                 type: string
-                description: Text of the note to create
+                description: Text of the action to create
       responses:
         201:
-          description: Successfully created a note
+          description: Successfully created a action
           schema:
             properties:
-              person_id:
+              menu_id:
                 type: integer
-                description: Id of the person associated with the note
-              note_id:
+                description: Id of the menu associated with the action
+              action_id:
                 type: integer
-                description: Id of the created note
+                description: Id of the created action
               content:
                 type: string
-                description: Text content of the note
+                description: Text content of the action
               timestamp:
                 type: string
-                description: Creation/Update timestamp of the person record
+                description: Creation/Update timestamp of the menu record
 
-  /people/{person_id}/notes/{note_id}:
+  /menu/{menu_id}/actions/{action_id}:
     get:
-      operationId: notes.read_one
+      operationId: actions.read_one
       tags:
-        - Notes
-      summary: Read a particular note associated with a person
-      description: Read a particular note associated with a person
+        - Actions
+      summary: Read a particular action associated with a menu
+      description: Read a particular action associated with a menu
       parameters:
-        - name: person_id
+        - name: menu_id
           in: path
-          description: Id of person associated with note
+          description: Id of menu associated with action
           type: integer
           required: True
-        - name: note_id
+        - name: action_id
           in: path
-          description: Id of note
+          description: Id of action
           type: integer
           required: True
       responses:
         200:
-          description: Successfully read note for a person
+          description: Successfully read action for a menu
           schema:
             type: object
             properties:
-              note_id:
+              action_id:
                 type: integer
-                description: Id of the note
-              person_id:
+                description: Id of the action
+              menu_id:
                 type: integer
-                description: Id of the person note associated with
+                description: Id of the menu action associated with
               content:
                 type: string
-                description: Text content of the note
+                description: Text content of the action
               timestamp:
                 type: string
-                description: Creation/Update timestamp of the note record
-
-    put:
-      operationId: notes.update
-      tags:
-        - Notes
-      summary: Update a note associated with a person
-      description: Update a note associated with a person
-      parameters:
-        - name: person_id
-          in: path
-          description: Id the person to update
-          type: integer
-          required: True
-        - name: note_id
-          in: path
-          description: Id of the note associated with a person
-          type: integer
-          required: True
-        - name: note
-          in: body
-          schema:
-            type: object
-            properties:
-              content:
-                type: string
-                description: Text content of the note to updated
-      responses:
-        200:
-          description: Successfully updated note
-          schema:
-            properties:
-              note_id:
-                type: string
-                description: Id of the note associated with a person
-              person_id:
-                type: integer
-                description: Id of the person in the database
-              content:
-                type: string
-                description: Text content of the updated note
-              timestamp:
-                type: string
-                description: Creation/Update timestamp of the note record
-
-    delete:
-      operationId: notes.delete
-      tags:
-        - Notes
-      summary: Delete a note associated with a person
-      description: Delete a note associated with a person
-      parameters:
-        - name: person_id
-          in: path
-          description: Id of person associated with note
-          type: integer
-          required: True
-        - name: note_id
-          in: path
-          description: Id of note
-          type: integer
-          required: True
-      responses:
-        200:
-          description: Successfully deleted a note
-
-
+                description: Creation/Update timestamp of the action record
