@@ -19,14 +19,13 @@ def read_all():
     menus = Menu.query.order_by(Menu.menu_id).all()
 
     # Serialize the data for the response
-
     menu_schema = MenuSchema(many=True)
     data = menu_schema.dump(menus).data
 
-    return data
+    return data, 200
 
 
-def read_one(user_id, menu_id):
+def read_one(menu_id):
     """
     This function responds to a request for /api/menu/{menu_id}
     with one matching menu from menu
@@ -37,14 +36,17 @@ def read_one(user_id, menu_id):
     # Build the initial query
     menu = (
         Menu.query.filter(Menu.menu_id == menu_id)
-        .filter(Menu.user_id == user_id)
         .outerjoin(Action)
         .one_or_none()
     )
 
     # Did we find a menu?
     if menu is not None:
-        return jsonify(menu)
+        # Serialize the data for the response
+        menu_schema = MenuSchema(many=False)
+        data = menu_schema.dump(menu).data
+
+        return data, 200
 
     # Otherwise, nope, didn't find that menu
     else:
@@ -59,13 +61,14 @@ def create(menu):
     :param menu:  menu to create in menu structure
     :return:        201 on success, 406 on menu exists
     """
-    user_id = menu.get("user_id")
 
-    user = User.query.filter(User.user_id == user_id).one_or_none()
+    # user_id = menu.get("user_id")
+    # user = User.query.filter(User.user_id == user_id).one_or_none()
+    # # Was a person found?
+    # if user is None:
+    #     abort(404, f"user not found for Id: {user_id}")
 
-    # Was a person found?
-    if user is None:
-        abort(404, f"user not found for Id: {user_id}")
+    user_id = 1  # hard-code for user
 
     name = menu.get("name")
 
@@ -82,6 +85,11 @@ def create(menu):
         db.session.add(new_menu)
         db.session.commit()
 
+        menu_schema = MenuSchema(many=False)
+        data = menu_schema.dump(new_menu).data
+
+        return data, 201
+
         return jsonify({'success': True}), 201
 
     # Otherwise, nope, menu exists already
@@ -90,13 +98,7 @@ def create(menu):
 
 
 def update(menu_id, menu):
-    """
-    This function updates an existing menu in the menu structure
 
-    :param menu_id:   Id of the menu to update in the menu structure
-    :param menu:      menu to update
-    :return:            updated menu structure
-    """
     # Get the menu requested from the db into session
     update_menu = Menu.query.filter(
         Menu.menu_id == menu_id

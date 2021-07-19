@@ -1,29 +1,47 @@
-# flask
+7/19 menu
+7/21 action
+7/22 record
 
-# connexion
+for each user
 
-# swagger (api first)
+## Menu
 
-# oauth
+GET /menus: get all menus
+POST /menus: create a menu
 
-# jwt_token
+GET /menus/{menu_id}: get a menu
+PUT /menus/{menu_id}: update a menu (not actions)
+DELETE /menus/{menu_id}
 
-# api_protect
+## Action
 
-# flask-login
+GET /menus/{menu_id}/actions: get all actions under a menu
+POST /menus/{menu_id}/actions: create a action with a menu
 
-# flask-admin
+GET /menus/{menu_id}/actions/{action_id}: get a action under a menu
+PUT /menus/{menu_id}/actions/{action_id}: update a action with a menu
+DELETE /menus/{menu_id}/actions/{action_id}: delete a action with a menu
 
-# build file structure
+## RECORD
 
-# pytest
+GET /menus/{menu_id}/actions/{action_id}/records: return all records under an action
+POST /menus/{menu_id}/actions/{action_id}/records: create a record with a action
 
-# AWS-EC2
+GET /menus/{menu_id}/actions/{action_id}/records/{record_id}: get a record under a action
+PUT /menus/{menu_id}/actions/{action_id}/records/{record_id}: update a record under a action
+DELETE /menus/{menu_id}/actions/{action_id}/records/{record_id}: delete a record under a action
 
-# deployment and CI/CD
+GET
 
-# monitoring
+- Record
 
-# google-ad
-
-# UI/UX designer
+- flask
+- connexion
+- swagger (api first)
+- oauth
+- jwt_token
+- api_protect
+- flask-login
+- flask-admin
+- pytest
+- file-structure

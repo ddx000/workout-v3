@@ -40,9 +40,6 @@ paths:
               name:
                 type: string
                 description: name of menu to create
-              user_id:
-                type: integer
-                description: user of the menu to post
 
       responses:
         201:
@@ -54,7 +51,7 @@ paths:
       tags:
         - Menu
       summary: Read one menu
-      description: Read one menu
+      description: Read one menu 2
       parameters:
         - name: menu_id
           in: path
@@ -64,6 +61,47 @@ paths:
       responses:
         200:
           description: Successfully read menu from menu data operation
+    put:
+      operationId: menu.update
+      tags:
+        - Menu
+      summary: Update a menu
+      description: Update a new menu 2
+      parameters:
+        - name: menu_id
+          in: path
+          description: Id the menu to update
+          type: integer
+          required: True
+        - name: menu
+          in: body
+          description: Menu to create
+          required: True
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: name of menu to create
+      responses:
+        200:
+          description: Successfully update menu
+
+    delete:
+      operationId: menu.delete
+      tags:
+        - Menu
+      summary: Delete a menu
+      description: Delete a menu
+      parameters:
+        - name: menu_id
+          in: path
+          type: integer
+          description: Id of the menu to delete
+          required: true
+      responses:
+        200:
+          description: Successfully deleted a menu
 
   /actions:
     get:

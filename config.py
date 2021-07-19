@@ -14,7 +14,6 @@ app = connex_app.app
 
 admin = Admin(app, name='microblog', template_mode='bootstrap3')
 
-print("##########2")
 # Build the Sqlite ULR for SqlAlchemy
 # three slash for windows
 sqlite_url = "sqlite:///" + os.path.join(basedir, "testsqlite.db")
