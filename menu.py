@@ -6,15 +6,18 @@ menu data
 from flask import make_response, abort, jsonify
 from config import db
 from models import User, Menu, Action, MenuSchema
+import connexion
 
 
-def read_all():
+def read_all(user, token_info):
     """
     This function responds to a request for /api/menu
     with the complete lists of menu
 
     :return:        json string of list of menu
     """
+
+    print("USer is ", user)
     # Create the list of menu from our data
     menus = Menu.query.order_by(Menu.menu_id).all()
 
@@ -25,7 +28,7 @@ def read_all():
     return data, 200
 
 
-def read_one(menu_id):
+def read_one(menu_id, user):
     """
     This function responds to a request for /api/menu/{menu_id}
     with one matching menu from menu
@@ -33,6 +36,7 @@ def read_one(menu_id):
     :param menu_id:   Id of menu to find
     :return:            menu matching id
     """
+    print("user is", user)
     # Build the initial query
     menu = (
         Menu.query.filter(Menu.menu_id == menu_id)

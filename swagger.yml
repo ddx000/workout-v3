@@ -12,12 +12,28 @@ basePath: /api
 
 # Paths supported by the server application
 paths:
+  /auth/{user_id}:
+    get:
+      summary: Return JWT token
+      operationId: jwt_auth.generate_token
+      parameters:
+        - name: user_id
+          description: User unique identifier
+          in: path
+          type: integer
+          required: true
+      responses:
+        '200':
+          description: JWT token
+
   /menu:
     get:
       operationId: menu.read_all
       tags:
         - Menu
       summary: Read the entire set of menu, sorted by last name
+      security:
+      - JWT: []
       description: Read the entire set of menu, sorted by last name
       responses:
         200:
@@ -58,6 +74,8 @@ paths:
           description: Id of the menu to get
           type: integer
           required: True
+      security:
+         - JWT: []
       responses:
         200:
           description: Successfully read menu from menu data operation
@@ -113,6 +131,7 @@ paths:
       responses:
         200:
           description: Successfully read actions for all menu operation
+
 
   /menu/{menu_id}/actions:
     post:
@@ -191,3 +210,13 @@ paths:
               timestamp:
                 type: string
                 description: Creation/Update timestamp of the action record
+
+
+
+
+securityDefinitions:
+  JWT:
+    type: apiKey
+    name: Authorization
+    in: header
+    x-apikeyInfoFunc: jwt_auth.decode_token
