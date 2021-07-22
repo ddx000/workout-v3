@@ -12,6 +12,27 @@ basePath: /api
 
 # Paths supported by the server application
 paths:
+  /auth/google_sign_in:
+    post:
+      summary: Google OAuth Login callback
+      operationId: jwt_auth.google_sign_in
+      parameters:
+        - name: req
+          in: body
+          description: req
+          required: True
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: req
+
+      responses:
+        201:
+          description: Successfully created menu
+
+
   /auth/{user_id}:
     get:
       summary: Return JWT token

@@ -6,8 +6,9 @@ from google.auth.transport import requests as google_requests
 from google.oauth2 import id_token
 
 import time
-
+import json
 import connexion
+import requests
 from jose import JWTError, jwt
 from werkzeug.exceptions import Unauthorized
 
@@ -17,10 +18,17 @@ JWT_LIFETIME_SECONDS = 100
 JWT_ALGORITHM = 'HS256'
 
 
-@app.route('/google_sign_in', methods=['POST'])
+with open("key.json", "r") as f:
+    key = json.load(f)
+    GOOGLE_OAUTH2_CLIENT_ID = key["GOOGLE_OAUTH2_CLIENT_ID"]
+
+
 def google_sign_in():
     # frontend user authorized and send a token(authtoken) here
-    token = request.json['id_token']
+
+    req_json = connexion.request.json
+
+    token = req_json['id_token']
     try:
         id_info = id_token.verify_oauth2_token(
             token,
@@ -35,7 +43,9 @@ def google_sign_in():
 
         create_user_by_googleoauth(id_info)
 
-        token = generate_token(id_info)
+        USER_ID = 1
+
+        token = generate_token(USER_ID)
 
     except ValueError:
         # Invalid token
@@ -54,14 +64,15 @@ def create_user_by_googleoauth(userinfo_response):
     else:
         print("User email not available or not verified by Google.")
 
+    print("try to create a model")
     # create a model
-    user = User(
-        id_=unique_id, name=users_name, email=users_email, profile_pic=picture
-    )
+    # user = User(
+    #     id_=unique_id, name=users_name, email=users_email, profile_pic=picture
+    # )
 
-    # Doesn't exist? Add to database
-    if not User.get(unique_id):
-        User.create(unique_id, users_name, users_email, picture)
+    # # Doesn't exist? Add to database
+    # if not User.get(unique_id):
+    #     User.create(unique_id, users_name, users_email, picture)
 
 
 def generate_token(user_id):
