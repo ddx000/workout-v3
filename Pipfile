@@ -29,6 +29,7 @@ MarkupSafe = "==1.1.0"
 SQLAlchemy = "==1.2.17"
 Werkzeug = "==0.14.1"
 python-jose = {extras = ["cryptography"], version = "*"}
+google-api-python-client = "*"
 
 [dev-packages]
 autopep8 = "*"
