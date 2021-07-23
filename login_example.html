@@ -22,11 +22,11 @@
             console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
             $.ajax({
                 type: "POST",
-                url: 'localhost:5000/google_sign_in',
+                url: 'http://localhost:5000/api/auth/google_sign_in',
                 data: JSON.stringify({ 'id_token': id_token }),
-                success: function () {
+                success: function (data) {
                     console.log('login success')
-                    window.location.reload();
+                    console.log(data)
                 },
                 dataType: 'json',
                 contentType: "application/json",

@@ -9,6 +9,7 @@ import time
 import json
 import connexion
 import requests
+from config import connex_app
 from jose import JWTError, jwt
 from werkzeug.exceptions import Unauthorized
 
@@ -23,7 +24,13 @@ with open("key.json", "r") as f:
     GOOGLE_OAUTH2_CLIENT_ID = key["GOOGLE_OAUTH2_CLIENT_ID"]
 
 
+# @connex_app.route("/auth/google_sign_in", methods=["OPTIONS"])
+# def handle_cors():
+#     return "", 200
+
+
 def google_sign_in():
+    print("called")
     # frontend user authorized and send a token(authtoken) here
 
     req_json = connexion.request.json
