@@ -83,7 +83,7 @@ def create_user_by_googleoauth(userinfo_response):
 
 
 def generate_token(user_id):
-    timestamp = _current_timestamp()
+    timestamp = int(time.time())
     payload = {
         "iss": JWT_ISSUER,
         "iat": int(timestamp),
@@ -99,14 +99,3 @@ def decode_token(token, required_scopes=None):
         return jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
     except JWTError as e:
         raise Unauthorized from e
-
-
-def get_secret(user, token_info) -> str:
-    return '''
-    You are user_id {user} and the secret is 'wbevuec'.
-    Decoded token claims: {token_info}.
-    '''.format(user=user, token_info=token_info)
-
-
-def _current_timestamp() -> int:
-    return int(time.time())
