@@ -38,10 +38,10 @@ paths:
       operationId: models.menu.read_all
       tags:
         - Menu
-      summary: Read the entire set of menu, sorted by last name
+      summary: Read the entire set of menu of the user, sorted by last name
       security:
       - JWT: []
-      description: Read the entire set of menu, sorted by last name
+      description: Read the entire set of menu of the user, sorted by last name
       responses:
         200:
           description: Successfully read menu set operation
@@ -134,21 +134,25 @@ paths:
         200:
           description: Successfully deleted a menu
 
-  /actions:
+  /menu/{menu_id}/actions:
     get:
-      operationId: models.actions.read_all
+      operationId: models.actions.read_all_actions_in_menu
       tags:
         - Actions
-      summary: Read the entire set of actions for all menu, sorted by timestamp
-      description: Read the entire set of actions for all menu, sorted by timestamp
+      summary: Get actions associated with a menu
+      description: Get actions associated with a menu
       security:
         - JWT: []
+      parameters:
+        - name: menu_id
+          in: path
+          description: Id of menu associated with action
+          type: integer
+          required: True
       responses:
-        200:
-          description: Successfully read actions for all menu operation
-
-
-  /menu/{menu_id}/actions:
+        '200':
+          description: OK
+  
     post:
       operationId: models.actions.create
       tags:
@@ -191,6 +195,9 @@ paths:
                 type: string
                 description: Creation/Update timestamp of the menu record
 
+
+
+
   /menu/{menu_id}/actions/{action_id}:
     get:
       operationId: models.actions.read_one
@@ -229,7 +236,61 @@ paths:
               timestamp:
                 type: string
                 description: Creation/Update timestamp of the action record
+    put:
+      operationId: models.actions.update
+      tags:
+        - Actions
+      summary: Update a action
+      description: Update a action
+      parameters:
+        - name: menu_id
+          in: path
+          description: Id the menu to update
+          type: integer
+          required: True
+        - name: action_id
+          in: path
+          description: Id the action to update
+          type: integer
+          required: True
+        - name: action
+          in: body
+          description: action to update
+          required: True
+          schema:
+            type: object
+            properties:
+              content:
+                type: string
+                description: action to update
+      security:
+        - JWT: []
+      responses:
+        200:
+          description: Successfully update action
 
+    delete:
+      operationId: models.actions.delete
+      tags:
+        - Actions
+      summary: Delete a action
+      description: Delete a action
+      parameters:
+        - name: menu_id
+          in: path
+          description: Id the menu to update
+          type: integer
+          required: True
+        - name: action_id
+          in: path
+          description: Id the action to update
+          type: integer
+          required: True
+      security:
+        - JWT: []
+      responses:
+        200:
+          description: Successfully deleted a menu
 
 
 
