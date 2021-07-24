@@ -18,7 +18,7 @@ JWT_LIFETIME_SECONDS = 100
 JWT_ALGORITHM = 'HS256'
 
 
-with open("key.json", "r") as f:
+with open("./conf/key.json", "r") as f:
     key = json.load(f)
     GOOGLE_OAUTH2_CLIENT_ID = key["GOOGLE_OAUTH2_CLIENT_ID"]
 

@@ -1,5 +1,5 @@
 import os
-from config import db
+from conf.config import db
 from models.models import User, Menu, Action, Record
 
 if os.path.exists("testsqlite.db"):

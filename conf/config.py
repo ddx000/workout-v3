@@ -22,8 +22,6 @@ admin = Admin(app, name='microblog', template_mode='bootstrap3')
 # three slash for windows
 sqlite_url = "sqlite:///" + os.path.join(basedir, "testsqlite.db")
 
-print(sqlite_url)
-
 # Configure the SqlAlchemy part of the app instance
 app.config["SQLALCHEMY_ECHO"] = False
 app.config["SQLALCHEMY_DATABASE_URI"] = sqlite_url
@@ -33,6 +31,8 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 # Create the SqlAlchemy db instance
 db = SQLAlchemy(app)
-print("##########3")
 # Initialize Marshmallow
 ma = Marshmallow(app)
+
+
+print("### init db and marshmallow ###")

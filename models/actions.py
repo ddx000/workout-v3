@@ -2,7 +2,7 @@
 
 from models.models import User, Menu, Action, ActionSchema
 from flask import make_response, abort, jsonify
-from config import db
+from conf.config import db
 
 
 def read_all():

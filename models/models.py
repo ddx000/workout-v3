@@ -1,5 +1,5 @@
 from datetime import datetime
-from config import db, ma, admin
+from conf.config import db, ma, admin
 from marshmallow import fields
 from flask_admin.contrib.sqla import ModelView
 
