@@ -9,7 +9,6 @@ import time
 import json
 import connexion
 import requests
-from config import connex_app
 from jose import JWTError, jwt
 from werkzeug.exceptions import Unauthorized
 

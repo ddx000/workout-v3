@@ -15,7 +15,7 @@ paths:
   /auth/google_sign_in:
     post:
       summary: Google OAuth Login callback
-      operationId: jwt_auth.google_sign_in
+      operationId: views.jwt_auth.google_sign_in
       parameters:
         - name: req
           in: body
@@ -36,7 +36,7 @@ paths:
   /auth/{user_id}:
     get:
       summary: Return JWT token
-      operationId: jwt_auth.generate_token
+      operationId: views.jwt_auth.generate_token
       parameters:
         - name: user_id
           description: User unique identifier
@@ -49,7 +49,7 @@ paths:
 
   /menu:
     get:
-      operationId: menu.read_all
+      operationId: models.menu.read_all
       tags:
         - Menu
       summary: Read the entire set of menu, sorted by last name
@@ -61,7 +61,7 @@ paths:
           description: Successfully read menu set operation
 
     post:
-      operationId: menu.create
+      operationId: models.menu.create
       tags:
         - Menu
       summary: Create a menu
@@ -84,7 +84,7 @@ paths:
 
   /menu/{menu_id}:
     get:
-      operationId: menu.read_one
+      operationId: models.menu.read_one
       tags:
         - Menu
       summary: Read one menu
@@ -101,7 +101,7 @@ paths:
         200:
           description: Successfully read menu from menu data operation
     put:
-      operationId: menu.update
+      operationId: models.menu.update
       tags:
         - Menu
       summary: Update a menu
@@ -127,7 +127,7 @@ paths:
           description: Successfully update menu
 
     delete:
-      operationId: menu.delete
+      operationId: models.menu.delete
       tags:
         - Menu
       summary: Delete a menu
@@ -144,7 +144,7 @@ paths:
 
   /actions:
     get:
-      operationId: actions.read_all
+      operationId: models.actions.read_all
       tags:
         - Actions
       summary: Read the entire set of actions for all menu, sorted by timestamp
@@ -156,7 +156,7 @@ paths:
 
   /menu/{menu_id}/actions:
     post:
-      operationId: actions.create
+      operationId: models.actions.create
       tags:
         - Actions
       summary: Create a action associated with a menu
@@ -197,7 +197,7 @@ paths:
 
   /menu/{menu_id}/actions/{action_id}:
     get:
-      operationId: actions.read_one
+      operationId: models.actions.read_one
       tags:
         - Actions
       summary: Read a particular action associated with a menu
@@ -240,4 +240,4 @@ securityDefinitions:
     type: apiKey
     name: Authorization
     in: header
-    x-apikeyInfoFunc: jwt_auth.decode_token
+    x-apikeyInfoFunc: views.jwt_auth.decode_token
