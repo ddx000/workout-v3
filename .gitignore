@@ -1,3 +1,5 @@
 testsqlite.db
 __pycache__/
 .vscode/settings.json
+conf/key.json
+conf/testsqlite-backup.db

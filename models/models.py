@@ -9,7 +9,7 @@ class User(db.Model):
     user_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32))
     email = db.Column(db.String(32))
-    access_token = db.Column(db.String(32))
+    profile_pic = db.Column(db.String(256))
     timestamp = db.Column(
         db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
     )

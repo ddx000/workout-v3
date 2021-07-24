@@ -12,20 +12,20 @@ import requests
 from jose import JWTError, jwt
 from werkzeug.exceptions import Unauthorized
 
+
+from models.models import User
+from conf.config import db
+
+
 JWT_ISSUER = 'com.zalando.connexion'
 JWT_SECRET = 'change_this'
-JWT_LIFETIME_SECONDS = 100
+JWT_LIFETIME_SECONDS = 100000000
 JWT_ALGORITHM = 'HS256'
 
 
 with open("./conf/key.json", "r") as f:
     key = json.load(f)
     GOOGLE_OAUTH2_CLIENT_ID = key["GOOGLE_OAUTH2_CLIENT_ID"]
-
-
-# @connex_app.route("/auth/google_sign_in", methods=["OPTIONS"])
-# def handle_cors():
-#     return "", 200
 
 
 def google_sign_in():
@@ -50,7 +50,7 @@ def google_sign_in():
         create_user_by_googleoauth(id_info)
 
         USER_ID = 1
-
+        # temporary geneate user_id == 1
         token = generate_token(USER_ID)
 
     except ValueError:
@@ -71,14 +71,27 @@ def create_user_by_googleoauth(userinfo_response):
         print("User email not available or not verified by Google.")
 
     print("try to create a model")
-    # create a model
-    # user = User(
-    #     id_=unique_id, name=users_name, email=users_email, profile_pic=picture
-    # )
+    print(unique_id, users_email, picture, users_name)
+
+    # prevent overflow in sqlite
+    user_id = int(unique_id[-8:])
 
     # # Doesn't exist? Add to database
-    # if not User.get(unique_id):
-    #     User.create(unique_id, users_name, users_email, picture)
+    existing_user = (
+        User.query.filter(User.user_id == user_id)
+        .one_or_none()
+    )
+
+    if existing_user:
+        print("user already exist")
+        return
+
+    # create a model
+    new_user = User(
+        user_id=user_id, name=users_name, email=users_email, profile_pic=picture
+    )
+    db.session.add(new_user)
+    db.session.commit()
 
 
 def generate_token(user_id):

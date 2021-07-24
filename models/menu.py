@@ -6,10 +6,9 @@ menu data
 from flask import make_response, abort, jsonify
 from conf.config import db
 from models.models import User, Menu, Action, MenuSchema
-import connexion
 
 
-def read_all(user, token_info):
+def read_all(user):
     """
     This function responds to a request for /api/menu
     with the complete lists of menu
@@ -17,9 +16,9 @@ def read_all(user, token_info):
     :return:        json string of list of menu
     """
 
-    print("USer is ", user)
     # Create the list of menu from our data
-    menus = Menu.query.order_by(Menu.menu_id).all()
+    menus = Menu.query.filter(
+        Menu.user_id == user).order_by(Menu.menu_id).all()
 
     # Serialize the data for the response
     menu_schema = MenuSchema(many=True)
@@ -28,7 +27,7 @@ def read_all(user, token_info):
     return data, 200
 
 
-def read_one(menu_id, user):
+def read_one(user, menu_id):
     """
     This function responds to a request for /api/menu/{menu_id}
     with one matching menu from menu
@@ -36,10 +35,9 @@ def read_one(menu_id, user):
     :param menu_id:   Id of menu to find
     :return:            menu matching id
     """
-    print("user is", user)
     # Build the initial query
     menu = (
-        Menu.query.filter(Menu.menu_id == menu_id)
+        Menu.query.filter(Menu.menu_id == menu_id, Menu.user_id == user)
         .outerjoin(Action)
         .one_or_none()
     )
@@ -57,7 +55,7 @@ def read_one(menu_id, user):
         abort(404, f"Menu not found for Id: {menu_id}")
 
 
-def create(menu):
+def create(user, menu):
     """
     This function creates a new menu in the menu structure
     based on the passed in menu data
@@ -65,15 +63,6 @@ def create(menu):
     :param menu:  menu to create in menu structure
     :return:        201 on success, 406 on menu exists
     """
-
-    # user_id = menu.get("user_id")
-    # user = User.query.filter(User.user_id == user_id).one_or_none()
-    # # Was a person found?
-    # if user is None:
-    #     abort(404, f"user not found for Id: {user_id}")
-
-    user_id = 1  # hard-code for user
-
     name = menu.get("name")
 
     existing_menu = (
@@ -84,7 +73,7 @@ def create(menu):
     # Can we insert this menu?
     if existing_menu is None:
         # Add the menu to the database
-        new_menu = Menu(name=name, user_id=user_id)
+        new_menu = Menu(name=name, user_id=user)
 
         db.session.add(new_menu)
         db.session.commit()
@@ -101,11 +90,11 @@ def create(menu):
         abort(409, f"Menu {name} exists already")
 
 
-def update(menu_id, menu):
+def update(user, menu_id, menu):
 
     # Get the menu requested from the db into session
     update_menu = Menu.query.filter(
-        Menu.menu_id == menu_id
+        Menu.menu_id == menu_id, Menu.user_id == user
     ).one_or_none()
 
     # Did we find an existing menu?
@@ -132,7 +121,7 @@ def update(menu_id, menu):
         abort(404, f"Menu not found for Id: {menu_id}")
 
 
-def delete(menu_id):
+def delete(user, menu_id):
     """
     This function deletes a menu from the menu structure
 
@@ -140,7 +129,8 @@ def delete(menu_id):
     :return:            200 on successful delete, 404 if not found
     """
     # Get the menu requested
-    menu = Menu.query.filter(Menu.menu_id == menu_id).one_or_none()
+    menu = Menu.query.filter(Menu.menu_id == menu_id,
+                             Menu.user_id == user).one_or_none()
 
     # Did we find a menu?
     if menu is not None:

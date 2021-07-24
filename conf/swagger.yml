@@ -14,6 +14,8 @@ basePath: /api
 paths:
   /auth/google_sign_in:
     post:
+      tags:
+        - Login
       summary: Google OAuth Login callback
       operationId: views.jwt_auth.google_sign_in
       parameters:
@@ -27,25 +29,9 @@ paths:
               name:
                 type: string
                 description: req
-
       responses:
-        201:
-          description: Successfully created menu
-
-
-  /auth/{user_id}:
-    get:
-      summary: Return JWT token
-      operationId: views.jwt_auth.generate_token
-      parameters:
-        - name: user_id
-          description: User unique identifier
-          in: path
-          type: integer
-          required: true
-      responses:
-        '200':
-          description: JWT token
+        200:
+          description: get a JWT token for google user
 
   /menu:
     get:
@@ -65,6 +51,8 @@ paths:
       tags:
         - Menu
       summary: Create a menu
+      security:
+        - JWT: []
       description: Create a new menu
       parameters:
         - name: menu
@@ -122,6 +110,8 @@ paths:
               name:
                 type: string
                 description: name of menu to create
+      security:
+        - JWT: []
       responses:
         200:
           description: Successfully update menu
@@ -138,6 +128,8 @@ paths:
           type: integer
           description: Id of the menu to delete
           required: true
+      security:
+        - JWT: []
       responses:
         200:
           description: Successfully deleted a menu
@@ -149,6 +141,8 @@ paths:
         - Actions
       summary: Read the entire set of actions for all menu, sorted by timestamp
       description: Read the entire set of actions for all menu, sorted by timestamp
+      security:
+        - JWT: []
       responses:
         200:
           description: Successfully read actions for all menu operation
@@ -161,6 +155,8 @@ paths:
         - Actions
       summary: Create a action associated with a menu
       description: Create a action associated with a menu
+      security:
+        - JWT: []
       parameters:
         - name: menu_id
           in: path
@@ -202,6 +198,8 @@ paths:
         - Actions
       summary: Read a particular action associated with a menu
       description: Read a particular action associated with a menu
+      security:
+        - JWT: []
       parameters:
         - name: menu_id
           in: path
