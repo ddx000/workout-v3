@@ -7,9 +7,28 @@ tech stack
 - flask-admin
 - pytest
 
+## how to setup develop env
+
+install python3.7
+https://www.python.org/downloads/release/python-379/
+
+pipenv install --skip-lock
+pipenv run python -m conf.build_database
+
 ## How to run it
 
+pipenv run python -m server or
 pipenv run python server.py
+
+## useful page
+
+http://localhost:5500/login_example.html
+http://localhost:5000/admin/
+http://localhost:5000/api/ui/
+
+## Note
+
+https://www.cnblogs.com/xueweihan/p/5118222.html
 
 ## Menu
 
@@ -27,7 +46,7 @@ GET /menus/{menu_id}/actions/{action_id}: get a action under a menu
 PUT /menus/{menu_id}/actions/{action_id}: update a action with a menu
 DELETE /menus/{menu_id}/actions/{action_id}: delete a action with a menu
 
-## RECORD
+## RECORD[Not implement]
 
 GET /menus/{menu_id}/actions/{action_id}/records: return all records under an action
 POST /menus/{menu_id}/actions/{action_id}/records: create a record with a action
@@ -35,6 +54,6 @@ GET /menus/{menu_id}/actions/{action_id}/records/{record_id}: get a record under
 PUT /menus/{menu_id}/actions/{action_id}/records/{record_id}: update a record under a action
 DELETE /menus/{menu_id}/actions/{action_id}/records/{record_id}: delete a record under a action
 
-## USER
+## USER[Not implement]
 
 GET /users/info: return current user info
