@@ -23,8 +23,8 @@ pipenv run python server.py
 
 ## useful page
 
-
-```eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjb20uemFsYW5kby5jb25uZXhpb24iLCJpYXQiOjE2MjcxOTc0OTksImV4cCI6MTcyNzE5NzQ5OSwic3ViIjoiMSJ9.mv4ASwKvy4R_Ivcia0WObZSjdccd06Tw1khHKUabN20```
+test JWT token
+```eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjb20uemFsYW5kby5jb25uZXhpb24iLCJpYXQiOjE2MjcxOTkzMTUsImV4cCI6MTAwMDAwMDAwMTYyNzE5OTMxNSwic3ViIjoiMSJ9.CF0FOEpnZpHHH7SBflQ8q-BPGe-He8nvihhPgozf3Xs```
 
 http://localhost:5500/login_example.html  
 http://localhost:5000/admin/  

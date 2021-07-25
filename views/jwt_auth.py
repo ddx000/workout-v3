@@ -19,7 +19,8 @@ from conf.config import db
 
 JWT_ISSUER = 'com.zalando.connexion'
 JWT_SECRET = 'change_this'
-JWT_LIFETIME_SECONDS = 100000000
+# TODO change secret and put in env
+JWT_LIFETIME_SECONDS = 86400
 JWT_ALGORITHM = 'HS256'
 
 
@@ -47,11 +48,10 @@ def google_sign_in():
         if id_info['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
             raise ValueError('Wrong issuer.')
 
-        create_user_by_googleoauth(id_info)
-
-        USER_ID = 1
-        # temporary geneate user_id == 1
-        token = generate_token(USER_ID)
+        # create user in db
+        user_id = create_user_by_googleoauth(id_info)
+        # issue jwt token for that user
+        token = generate_token(user_id)
 
     except ValueError:
         # Invalid token
@@ -92,6 +92,8 @@ def create_user_by_googleoauth(userinfo_response):
     )
     db.session.add(new_user)
     db.session.commit()
+
+    return user_id
 
 
 def generate_token(user_id):
