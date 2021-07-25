@@ -17,7 +17,7 @@ from models.models import User
 from conf.config import db
 
 
-JWT_ISSUER = 'com.zalando.connexion'
+JWT_ISSUER = 'jimmy_test'
 JWT_SECRET = 'change_this'
 # TODO change secret and put in env
 JWT_LIFETIME_SECONDS = 86400
@@ -51,7 +51,9 @@ def google_sign_in():
         # create user in db
         user_id = create_user_by_googleoauth(id_info)
         # issue jwt token for that user
-        token = generate_token(user_id)
+        print("going to issue", user_id)
+        if user_id is not None:
+            token = generate_token(user_id)
 
     except ValueError:
         # Invalid token
@@ -84,7 +86,7 @@ def create_user_by_googleoauth(userinfo_response):
 
     if existing_user:
         print("user already exist")
-        return
+        return user_id
 
     # create a model
     new_user = User(

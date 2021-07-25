@@ -6,7 +6,7 @@ from conf.config import db
 
 
 def read_all_records_in_action(user, menu_id, action_id):
-
+    print("read_all_records_in_action", user)
     # TODO user validation
 
     records = Record.query.filter(Record.action_id == action_id).order_by(

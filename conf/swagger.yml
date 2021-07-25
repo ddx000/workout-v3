@@ -33,6 +33,19 @@ paths:
         200:
           description: get a JWT token for google user
 
+
+  /user/info:
+    get:
+      operationId: models.users.get_user
+      tags:
+        - Login
+      summary: get user infomation by JWT token
+      security:
+      - JWT: []
+      responses:
+        200:
+          description: Successfully read user info
+
   /menu:
     get:
       operationId: models.menu.read_all
