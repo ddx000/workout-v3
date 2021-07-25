@@ -10,7 +10,7 @@ class User(db.Model):
     name = db.Column(db.String(32))
     email = db.Column(db.String(32))
     profile_pic = db.Column(db.String(256))
-    timestamp = db.Column(
+    _last_modified = db.Column(
         db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
     )
     menus = db.relationship(
@@ -18,7 +18,7 @@ class User(db.Model):
         backref="User",
         cascade="all, delete, delete-orphan",
         single_parent=True,
-        order_by="desc(Menu.timestamp)",
+        order_by="desc(Menu._last_modified)",
     )
 
 
@@ -26,8 +26,10 @@ class Menu(db.Model):
     __tablename__ = "menu"
     menu_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32))
+    plan_time = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
-    timestamp = db.Column(
+
+    _last_modified = db.Column(
         db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
     )
     actions = db.relationship(
@@ -35,7 +37,7 @@ class Menu(db.Model):
         backref="Menu",
         cascade="all, delete, delete-orphan",
         single_parent=True,
-        order_by="desc(Action.timestamp)",
+        order_by="desc(Action._last_modified)",
     )
 
 
@@ -44,7 +46,7 @@ class Action(db.Model):
     action_id = db.Column(db.Integer, primary_key=True)
     menu_id = db.Column(db.Integer, db.ForeignKey("menu.menu_id"))
     content = db.Column(db.String, nullable=False)
-    timestamp = db.Column(
+    _last_modified = db.Column(
         db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
     )
     records = db.relationship(
@@ -52,7 +54,7 @@ class Action(db.Model):
         backref="Action",
         cascade="all, delete, delete-orphan",
         single_parent=True,
-        order_by="desc(Record.timestamp)",
+        order_by="desc(Record._last_modified)",
     )
 
 
@@ -62,7 +64,7 @@ class Record(db.Model):
     action_id = db.Column(db.Integer, db.ForeignKey("action.action_id"))
     weight = db.Column(db.Integer)
     reps = db.Column(db.Integer)
-    timestamp = db.Column(
+    _last_modified = db.Column(
         db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow
     )
 
@@ -75,21 +77,17 @@ class MenuSchema(ma.ModelSchema):
         model = Menu
         sqla_session = db.session
 
-    actions = fields.Nested("MenuActionSchema", default=[], many=True)
+    # actions = fields.Nested("MenuActionSchema", default=[], many=True)
 
 
-class MenuActionSchema(ma.ModelSchema):
-    """
-    This class exists to get around a recursion issue
-    """
+# class MenuActionSchema(ma.ModelSchema):
+#     def __init__(self, **kwargs):
+#         super().__init__(strict=True, **kwargs)
 
-    def __init__(self, **kwargs):
-        super().__init__(strict=True, **kwargs)
-
-    action_id = fields.Int()
-    menu_id = fields.Int()
-    content = fields.Str()
-    timestamp = fields.Str()
+#     action_id = fields.Int()
+#     menu_id = fields.Int()
+#     content = fields.Str()
+#     _last_modified = fields.Str()
 
 
 class ActionSchema(ma.ModelSchema):
@@ -114,7 +112,7 @@ class ActionMenuSchema(ma.ModelSchema):
     menu_id = fields.Int()
     user_id = fields.Int()
     name = fields.Str()
-    timestamp = fields.Str()
+    _last_modified = fields.Str()
 
 
 class RecordSchema(ma.ModelSchema):

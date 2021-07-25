@@ -191,12 +191,9 @@ paths:
               content:
                 type: string
                 description: Text content of the action
-              timestamp:
+              _last_modified:
                 type: string
                 description: Creation/Update timestamp of the menu record
-
-
-
 
   /menu/{menu_id}/actions/{action_id}:
     get:
@@ -233,7 +230,7 @@ paths:
               content:
                 type: string
                 description: Text content of the action
-              timestamp:
+              _last_modified:
                 type: string
                 description: Creation/Update timestamp of the action record
     put:
@@ -291,6 +288,69 @@ paths:
       responses:
         200:
           description: Successfully deleted a menu
+
+  /menus/{menu_id}/actions/{action_id}/records:
+   get:
+      operationId: models.records.read_all_actions_in_menu
+      tags:
+        - Actions
+      summary: Get actions associated with a menu
+      description: Get actions associated with a menu
+      security:
+        - JWT: []
+      parameters:
+        - name: menu_id
+          in: path
+          description: Id of menu associated with action
+          type: integer
+          required: True
+      responses:
+        '200':
+          description: OK
+   post:
+      operationId: models.actions.create
+      tags:
+        - Actions
+      summary: Create a action associated with a menu
+      description: Create a action associated with a menu
+      security:
+        - JWT: []
+      parameters:
+        - name: menu_id
+          in: path
+          description: Id of menu associated with action
+          type: integer
+          required: True
+        - name: action
+          in: body
+          description: Text content of the action to create
+          required: True
+          schema:
+            type: object
+            properties:
+              content:
+                type: string
+                description: Text of the action to create
+      responses:
+        201:
+          description: Successfully created a action
+          schema:
+            properties:
+              menu_id:
+                type: integer
+                description: Id of the menu associated with the action
+              action_id:
+                type: integer
+                description: Id of the created action
+              content:
+                type: string
+                description: Text content of the action
+              _last_modified:
+                type: string
+                description: Creation/Update timestamp of the menu record
+
+
+  /menus/{menu_id}/actions/{action_id}/records/{record_id}:
 
 
 

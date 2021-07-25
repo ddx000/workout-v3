@@ -19,7 +19,7 @@ def read_all_actions_in_menu(user, menu_id):
 
     # Query the database for all the actions
     actions = Action.query.filter(Action.menu_id == menu_id).order_by(
-        db.desc(Action.timestamp)).all()
+        db.desc(Action._last_modified)).all()
 
     action_schema = ActionSchema(many=True)
     data = action_schema.dump(actions).data
