@@ -3,9 +3,11 @@ This is the menu module and supports all the REST actions for the
 menu data
 """
 
+
 from flask import make_response, abort, jsonify
 from conf.config import db
 from models.models import User, Menu, Action, MenuSchema
+from datetime import datetime
 
 
 def read_all(user):
@@ -65,29 +67,21 @@ def create(user, menu):
     """
     name = menu.get("name")
 
-    existing_menu = (
-        Menu.query.filter(Menu.name == name)
-        .one_or_none()
-    )
+    if menu.get("plan_time"):
+        print(menu.get("plan_time"))
+        plan = datetime.strptime(menu.get("plan_time"), "%Y-%m-%d")
+        print(plan)
 
-    # Can we insert this menu?
-    if existing_menu is None:
-        # Add the menu to the database
-        new_menu = Menu(name=name, user_id=user)
+    # Add the menu to the database
+    new_menu = Menu(name=name, user_id=user, plan_time=plan)
 
-        db.session.add(new_menu)
-        db.session.commit()
+    db.session.add(new_menu)
+    db.session.commit()
 
-        menu_schema = MenuSchema(many=False)
-        data = menu_schema.dump(new_menu).data
+    menu_schema = MenuSchema(many=False)
+    data = menu_schema.dump(new_menu).data
 
-        return data, 201
-
-        return jsonify({'success': True}), 201
-
-    # Otherwise, nope, menu exists already
-    else:
-        abort(409, f"Menu {name} exists already")
+    return data, 201
 
 
 def update(user, menu_id, menu):

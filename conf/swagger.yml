@@ -65,6 +65,12 @@ paths:
               name:
                 type: string
                 description: name of menu to create
+              plan_time:
+                type: string
+                format: date
+                example: "2019-05-17"
+                pattern: \d{4}-\d{2}-\d{2}
+                description: plan time of menu to create
 
       responses:
         201:
@@ -291,28 +297,72 @@ paths:
 
   /menus/{menu_id}/actions/{action_id}/records:
    get:
-      operationId: models.records.read_all_actions_in_menu
+      operationId: models.records.read_all_records_in_action
       tags:
-        - Actions
-      summary: Get actions associated with a menu
-      description: Get actions associated with a menu
+        - Records
+      summary: Get records associated with an action
+      description: Get records associated with an action
       security:
         - JWT: []
       parameters:
         - name: menu_id
           in: path
-          description: Id of menu associated with action
+          description: Id of menu
+          type: integer
+          required: True
+        - name: action_id
+          in: path
+          description: Id of action
           type: integer
           required: True
       responses:
         '200':
           description: OK
+
    post:
-      operationId: models.actions.create
+      operationId: models.records.create
       tags:
-        - Actions
-      summary: Create a action associated with a menu
-      description: Create a action associated with a menu
+        - Records
+      summary: Create a record associated with a action
+      description: Create a record associated with a action
+      security:
+        - JWT: []
+      parameters:
+        - name: menu_id
+          in: path
+          description: Id of menu
+          type: integer
+          required: True
+        - name: action_id
+          in: path
+          description: Id of action
+          type: integer
+          required: True
+        - name: record
+          in: body
+          description: Text content of the record to create
+          required: True
+          schema:
+            type: object
+            properties:
+              weight:
+                type: integer
+                description: training weight (kg)
+              reps:
+                type: integer
+                description: repeat times for training
+      responses:
+        201:
+          description: Successfully created a record
+
+
+  /menus/{menu_id}/actions/{action_id}/records/{record_id}:
+    get:
+      operationId: models.records.read_one
+      tags:
+        - Records
+      summary: Read a particular record associated with an action
+      description: Read a particular record associated with an action
       security:
         - JWT: []
       parameters:
@@ -321,37 +371,88 @@ paths:
           description: Id of menu associated with action
           type: integer
           required: True
-        - name: action
+        - name: action_id
+          in: path
+          description: Id of action
+          type: integer
+          required: True
+        - name: record_id
+          in: path
+          description: Id of record
+          type: integer
+          required: True
+      responses:
+        200:
+          description: Successfully read record
+
+    put:
+      operationId: models.records.update
+      tags:
+        - Records
+      summary: Update a record
+      description: Update a record
+      parameters:
+        - name: menu_id
+          in: path
+          description: Id of menu associated with action
+          type: integer
+          required: True
+        - name: action_id
+          in: path
+          description: Id of action
+          type: integer
+          required: True
+        - name: record_id
+          in: path
+          description: Id of record
+          type: integer
+          required: True
+        - name: record
           in: body
-          description: Text content of the action to create
+          description: record to update
           required: True
           schema:
             type: object
             properties:
-              content:
-                type: string
-                description: Text of the action to create
+              weight:
+                type: integer
+                description: training weight (kg)
+              reps:
+                type: integer
+                description: repeat times for training
+      security:
+        - JWT: []
       responses:
-        201:
-          description: Successfully created a action
-          schema:
-            properties:
-              menu_id:
-                type: integer
-                description: Id of the menu associated with the action
-              action_id:
-                type: integer
-                description: Id of the created action
-              content:
-                type: string
-                description: Text content of the action
-              _last_modified:
-                type: string
-                description: Creation/Update timestamp of the menu record
+        200:
+          description: Successfully update record
 
-
-  /menus/{menu_id}/actions/{action_id}/records/{record_id}:
-
+    delete:
+      operationId: models.records.delete
+      tags:
+        - Records
+      summary: Delete a record
+      description: Delete a record
+      parameters:
+        - name: menu_id
+          in: path
+          description: Id of menu associated with action
+          type: integer
+          required: True
+        - name: action_id
+          in: path
+          description: Id of action
+          type: integer
+          required: True
+        - name: record_id
+          in: path
+          description: Id of record
+          type: integer
+          required: True
+      security:
+        - JWT: []
+      responses:
+        200:
+          description: Successfully deleted a record
 
 
 securityDefinitions:

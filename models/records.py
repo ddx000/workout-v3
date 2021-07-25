@@ -5,7 +5,10 @@ from flask import make_response, abort
 from conf.config import db
 
 
-def read_all_records_in_action(user, action_id):
+def read_all_records_in_action(user, menu_id, action_id):
+
+    # TODO user validation
+
     records = Record.query.filter(Record.action_id == action_id).order_by(
         db.desc(Record._last_modified)).all()
     record_schema = RecordSchema(many=True)
@@ -13,7 +16,7 @@ def read_all_records_in_action(user, action_id):
     return data
 
 
-def read_one(user, action_id, record_id):
+def read_one(user, menu_id, action_id, record_id):
     record = (
         Record.query.filter(Record.action_id == action_id)
         .filter(Record.record_id == record_id)
@@ -30,7 +33,7 @@ def read_one(user, action_id, record_id):
         abort(404, f"Record not found for Id: {record_id}")
 
 
-def create(user, action_id, record):
+def create(user, menu_id, action_id, record):
 
     # TODO User validation
 
@@ -42,13 +45,10 @@ def create(user, action_id, record):
 
     schema = RecordSchema()
     print("record passed in ", record)
-    new_re = schema.load(record, session=db.session).data
+    new_record = schema.load(record, session=db.session).data
+    new_record.action_id = action_id
 
-    print(new_re)
-
-    #new_record = Record(action_id=action_id, content=record.get('content'))
-
-    db.session.add(new_re)
+    db.session.add(new_record)
     db.session.commit()
 
     record_schema = RecordSchema(many=False)
@@ -57,7 +57,7 @@ def create(user, action_id, record):
     return data, 201
 
 
-def update(user, action_id, record_id, record):
+def update(user, menu_id, action_id, record_id, record):
 
     update_record = (
         Record.query.filter(Action.action_id == action_id)
@@ -90,7 +90,7 @@ def update(user, action_id, record_id, record):
         abort(404, f"Record not found for Id: {record_id}")
 
 
-def delete(user, action_id, record_id):
+def delete(user, menu_id, action_id, record_id):
 
     record = (
         Record.query.filter(Action.action_id == action_id)
