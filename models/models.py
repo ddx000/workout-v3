@@ -77,17 +77,17 @@ class MenuSchema(ma.ModelSchema):
         model = Menu
         sqla_session = db.session
 
-    # actions = fields.Nested("MenuActionSchema", default=[], many=True)
+    actions = fields.Nested("MenuActionSchema", default=[], many=True)
 
 
-# class MenuActionSchema(ma.ModelSchema):
-#     def __init__(self, **kwargs):
-#         super().__init__(strict=True, **kwargs)
+class MenuActionSchema(ma.ModelSchema):
+    def __init__(self, **kwargs):
+        super().__init__(strict=True, **kwargs)
 
-#     action_id = fields.Int()
-#     menu_id = fields.Int()
-#     content = fields.Str()
-#     _last_modified = fields.Str()
+    action_id = fields.Int()
+    menu_id = fields.Int()
+    content = fields.Str()
+    _last_modified = fields.Str()
 
 
 class ActionSchema(ma.ModelSchema):
