@@ -88,6 +88,7 @@ class MenuActionSchema(ma.ModelSchema):
     menu_id = fields.Int()
     content = fields.Str()
     _last_modified = fields.Str()
+    records = fields.Nested("RecordSchema", default=[], many=True)
 
 
 class ActionSchema(ma.ModelSchema):
