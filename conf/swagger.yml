@@ -308,7 +308,7 @@ paths:
         200:
           description: Successfully deleted a menu
 
-  /menus/{menu_id}/actions/{action_id}/records:
+  /menu/{menu_id}/actions/{action_id}/records:
    get:
       operationId: models.records.read_all_records_in_action
       tags:
@@ -369,7 +369,7 @@ paths:
           description: Successfully created a record
 
 
-  /menus/{menu_id}/actions/{action_id}/records/{record_id}:
+  /menu/{menu_id}/actions/{action_id}/records/{record_id}:
     get:
       operationId: models.records.read_one
       tags:

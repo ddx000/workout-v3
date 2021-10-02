@@ -126,12 +126,21 @@ def delete(user, menu_id):
     menu = Menu.query.filter(Menu.menu_id == menu_id,
                              Menu.user_id == user).one_or_none()
 
+    res = {'resource': "Menu", "action": "Delete", "resource_id": menu_id}
+
     # Did we find a menu?
     if menu is not None:
         db.session.delete(menu)
         db.session.commit()
-        return make_response(f"Menu {menu_id} deleted", 200)
+
+        res['result'] = "Success"
+
+        return make_response(jsonify(res), 200)
 
     # Otherwise, nope, didn't find that menu
     else:
-        abort(404, f"Menu not found for Id: {menu_id}")
+        res['result'] = "Not Found"
+
+        return make_response(
+            jsonify(res), 404
+        )

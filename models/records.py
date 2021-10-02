@@ -1,7 +1,7 @@
 
 
 from models.models import User, Action, Record, RecordSchema
-from flask import make_response, abort
+from flask import make_response, abort, jsonify
 from conf.config import db
 
 
@@ -98,14 +98,20 @@ def delete(user, menu_id, action_id, record_id):
         .one_or_none()
     )
 
+    res = {'resource': "Record", "action": "Delete", "resource_id": record_id}
+
     # did we find a record?
     if record is not None:
         db.session.delete(record)
         db.session.commit()
+        res['result'] = "Success"
         return make_response(
-            "Record {record_id} deleted".format(record_id=record_id), 200
+            jsonify(res), 200
         )
 
     # Otherwise, nope, didn't find that record
     else:
-        abort(404, f"Record not found for Id: {record_id}")
+        res['result'] = "Not Found"
+        return make_response(
+            jsonify(res), 404
+        )

@@ -144,14 +144,19 @@ def delete(user, menu_id, action_id):
         .one_or_none()
     )
 
+    res = {'resource': "Action", "action": "Delete", "resource_id": action_id}
+
     # did we find a action?
     if action is not None:
         db.session.delete(action)
         db.session.commit()
-        return make_response(
-            "Action {action_id} deleted".format(action_id=action_id), 200
-        )
+
+        res['result'] = 'Success'
+        return make_response(jsonify(res), 200)
 
     # Otherwise, nope, didn't find that action
     else:
-        abort(404, f"Action not found for Id: {action_id}")
+
+        res['result'] = 'Not Found'
+
+        return make_response(jsonify(res), 404)
